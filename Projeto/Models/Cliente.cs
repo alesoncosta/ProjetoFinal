@@ -10,6 +10,7 @@
 		public string Celular { get; set; }
 
 		public string Endereco { get; set; }
+		public virtual ICollection<Venda>? Vendas { get; set; }
 
 	}
 }

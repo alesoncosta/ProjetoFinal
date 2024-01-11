@@ -1,0 +1,39 @@
+﻿@model IEnumerable<Projeto.Models.Venda>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Lista de Vendas</h1>
+
+<p>
+    <a class="btn btn-primary" asp-action="Create">Nova Venda</a>
+</p>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Data da Venda</th>
+            <th>Cliente</th>
+            <th>Produto</th>
+            <th>Total da Venda</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.DataVenda.ToString("dd/MM/yyyy")</td>
+                <td>@item.Cliente.Nome</td>
+                <td>@item.ProdutoId</td>
+                <td>R$ @item.TotalVenda.ToString("0.00")</td>
+                <td>
+                    <a class="btn btn-info" asp-action="Details" asp-route-id="@item.VendaId">Detalhes</a>
+                    <a class="btn btn-warning" asp-action="Edit" asp-route-id="@item.VendaId">Editar</a>
+                    <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.VendaId">Excluir</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

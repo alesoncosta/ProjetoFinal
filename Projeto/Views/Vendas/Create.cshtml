@@ -1,0 +1,147 @@
+﻿@model Projeto.Models.VendaViewModel
+
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Criar</h1>
+
+<h4>Venda</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group">
+                <label asp-for="oCliente.Id" class="control-label">Selecione um Cliente:</label>
+                <select asp-for="oCliente.Id" asp-items="@(new SelectList(Model.oListCliente, "Id", "Nome"))" class="form-control"></select>
+            </div>
+
+
+            <div class="form-group">
+                <label class="control-label">Selecione Produtos:</label>
+                <table class="table table-bordered" id="produtosTable">
+                    <thead>
+                        <tr>
+                            <th style="width: 60%;">Produto</th>
+                            <th style="width: 20%;">Quantidade</th>
+                            <th style="width: 20%;">Ação</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <select asp-for="oProduto.Id" asp-items="@(new SelectList(Model.oListProduto, "Id", "Nome"))" class="form-control"></select>
+                            </td>
+                            <td>
+                                <input asp-for="QuantidadeProduto" class="form-control" />
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-danger" onclick="removerLinha(this)">Remover</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <button type="button" class="btn btn-primary" onclick="adicionarLinha()">Adicionar Produto</button>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="DataVenda" class="control-label">Data da Venda</label>
+                <input asp-for="DataVenda" class="form-control" />
+                <span asp-validation-for="DataVenda" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="ValorTotal" class="control-label">Valor Total</label>
+                <input asp-for="ValorTotal" class="form-control" readonly />
+            </div>
+
+            <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+            <script>
+                $(document).ready(function () {
+                    $("#oProduto_Id, #QuantidadeProduto").change(calcularValorTotal);
+                });
+
+                function calcularValorTotal() {
+                    var produtoId = $("#oProduto_Id").val();
+                    var quantidade = $("#QuantidadeProduto").val();
+                    var valorProduto = obterValorProduto(produtoId);
+                    var valorTotalCalculado = calcularTotal(valorProduto, quantidade);
+                    $("#ValorTotal").val(valorTotalCalculado);
+                }
+
+                function calcularTotal(valorProduto, quantidade) {
+                    return valorProduto * quantidade;
+                }
+
+                function obterValorProduto(produtoId) {
+                    var produtoSelecionado = Model.oListProduto.find(p => p.Id == produtoId);
+                    return produtoSelecionado ? produtoSelecionado.Valor : 0;
+                }
+
+                function adicionarLinha() {
+                    var novaLinha = $("#produtosTable tbody tr:first").clone();
+                    novaLinha.find("select, input").val("");
+                    $("#produtosTable tbody").append(novaLinha);
+                }
+
+                function removerLinha(button) {
+                    $(button).closest("tr").remove();
+                }
+            </script>
+            <div class="form-group">
+                <input type="submit" value="Criar" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Voltar para a lista</a>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $("select[name='oProduto.Id'], input[name='QuantidadeProduto']").change(calcularValorTotal);
+        });
+
+        function calcularValorTotal() {
+            var produtoId = $("select[name='oProduto.Id']").val();
+            var quantidade = $("input[name='QuantidadeProduto']").val();
+            var valorProduto = obterValorProduto(produtoId);
+            var valorTotalCalculado = calcularTotal(valorProduto, quantidade);
+            $("#ValorTotal").val(valorTotalCalculado);
+        }
+
+
+        function calcularTotal(valorProduto, quantidade) {
+            return valorProduto * quantidade;
+        }
+
+        function obterValorProduto(produtoId) {
+            var produtoSelecionado = Model.oListProduto.find(p => p.Id == produtoId);
+            return produtoSelecionado ? produtoSelecionado.Valor : 0;
+        }
+
+        function adicionarLinha() {
+            var novaLinha = $("#produtosTable tbody tr:first").clone();
+            novaLinha.find("select, input").val("");
+            $("#produtosTable tbody").append(novaLinha);
+        }
+
+        function removerLinha(button) {
+            $(button).closest("tr").remove();
+        }
+    </script>
+
+}
+</script>
+
+
+
+
+
+
